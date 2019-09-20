@@ -1,4 +1,4 @@
-# Linux Microdia Keyboard Chipset Driver #
+# SONiX USB Keyboard Driver #
 
 For Chipset `0x0c45`:`0x7603`
 The kernel reports the chipset as `SONiX USB Keyboard`
