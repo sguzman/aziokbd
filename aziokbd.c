@@ -26,6 +26,7 @@
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
 #include <linux/kernel.h>
+#include <linux/version.h>
 #include <linux/slab.h>
 #include <linux/module.h>
 #include <linux/init.h>
@@ -405,7 +406,11 @@ static int usb_kbd_probe(struct usb_interface *iface,
 		return -ENODEV;
 
 	pipe = usb_rcvintpipe(dev, endpoint->bEndpointAddress);
-	maxp = usb_maxpacket(dev, pipe);
+	#if LINUX_VERSION_CODE < KERNEL_VERSION(5,19,0)
+	    maxp = usb_maxpacket(dev, pipe, usb_pipeout(pipe));
+	#else
+		maxp = usb_maxpacket(dev, pipe);
+	#endif
 	kbd = kzalloc(sizeof(struct usb_kbd), GFP_KERNEL);
 	input_dev = input_allocate_device();
 	if (!kbd || !input_dev)
