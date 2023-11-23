@@ -28,7 +28,7 @@ grubquirk="usbhid.quirks=$quirk"
 if ! (cat /etc/default/grub.d/aziokbd.conf | grep "$grubquirk"); then
     echo '## Writing to /etc/default/grub.d/aziokbd.conf ##'
     echo $grubquirk >> /etc/default/grub.d/aziokbd.conf
-    $distro = $(lsb_release -si)
+    distro = $(lsb_release -si)
     if ($distro | grep 'Ubuntu'); then
         update-grub
     fi
