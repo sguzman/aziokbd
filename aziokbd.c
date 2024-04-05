@@ -423,12 +423,24 @@ static int usb_kbd_probe(struct usb_interface *iface,
 	kbd->dev = input_dev;
 
 	if (dev->manufacturer)
-		strlcpy(kbd->name, dev->manufacturer, sizeof(kbd->name));
+		#if LINUX_VERSION_CODE < KERNEL_VERSION(6,8,0)
+			strlcpy(kbd->name, dev->manufacturer, sizeof(kbd->name));
+		#else
+			strscpy(kbd->name, dev->manufacturer, sizeof(kbd->name));
+		#endif
 
 	if (dev->product) {
 		if (dev->manufacturer)
-			strlcat(kbd->name, " ", sizeof(kbd->name));
-		strlcat(kbd->name, dev->product, sizeof(kbd->name));
+			#if LINUX_VERSION_CODE < KERNEL_VERSION(6,8,0)
+				strlcat(kbd->name, " ", sizeof(kbd->name));
+			#else
+				strncat(kbd->name, " ", sizeof(kbd->name));
+			#endif
+		#if LINUX_VERSION_CODE < KERNEL_VERSION(6,8,0)
+			strlcat(kbd->name, dev->product, sizeof(kbd->name));
+		#else
+			strncat(kbd->name, dev->product, sizeof(kbd->name));
+		#endif
 	}
 
 	if (!strlen(kbd->name))
@@ -440,7 +452,11 @@ static int usb_kbd_probe(struct usb_interface *iface,
 	printk("<1>aziokbd: detected %s\n", kbd->name);
 
 	usb_make_path(dev, kbd->phys, sizeof(kbd->phys));
-	strlcat(kbd->phys, "/input0", sizeof(kbd->phys));
+	#if LINUX_VERSION_CODE < KERNEL_VERSION(6,8,0)
+		strlcat(kbd->phys, "/input0", sizeof(kbd->phys));
+	#else
+		strncat(kbd->phys, "/input0", sizeof(kbd->phys));
+	#endif
 
 	input_dev->name = kbd->name;
 	input_dev->phys = kbd->phys;
