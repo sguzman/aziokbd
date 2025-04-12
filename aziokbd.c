@@ -530,6 +530,7 @@ static void usb_kbd_disconnect(struct usb_interface *intf)
 
 static struct usb_device_id usb_kbd_id_table[] = {
 	{ USB_DEVICE(ML_VENDOR_ID, ML_PRODUCT_ID) },
+  { USB_DEVICE(0x0c45, 0x7603) },
 	{ }						/* Terminating entry */
 };
 
